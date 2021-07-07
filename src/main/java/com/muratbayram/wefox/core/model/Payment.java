@@ -58,4 +58,16 @@ public class Payment {
     public void setPaymentType(String paymentType) {
         this.paymentType = paymentType;
     }
+
+    @Override
+    public String toString() {
+        return "Payment{" +
+                "paymentId='" + paymentId + '\'' +
+                ", accountId=" + accountId +
+                ", amount=" + amount +
+                ", delay=" + delay +
+                ", paymentType='" + paymentType + '\'' +
+                ", creditCard='" + creditCard + '\'' +
+                '}';
+    }
 }

@@ -7,6 +7,8 @@ import com.muratbayram.wefox.core.port.PaymentDBPort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 public class PaymentSqlAdapter implements PaymentDBPort {
 
@@ -19,6 +21,8 @@ public class PaymentSqlAdapter implements PaymentDBPort {
 
     @Override
     public void insert(Payment payment) {
-        repository.save(new PaymentEntity(payment));
+        PaymentEntity entity = new PaymentEntity(payment);
+        entity.setCreatedOn(new Date());
+        repository.save(entity);
     }
 }

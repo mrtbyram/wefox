@@ -1,7 +1,6 @@
-package com.muratbayram.wefox.adapter;
+package com.muratbayram.wefox.core.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.muratbayram.wefox.core.model.Payment;
 
 import java.math.BigDecimal;
 

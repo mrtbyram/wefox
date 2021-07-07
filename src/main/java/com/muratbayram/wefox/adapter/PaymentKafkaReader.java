@@ -2,6 +2,7 @@ package com.muratbayram.wefox.adapter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.muratbayram.wefox.core.model.PaymentDTO;
 import com.muratbayram.wefox.core.service.PaymentManager;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
@@ -18,10 +19,10 @@ public class PaymentKafkaReader {
     }
 
     @KafkaListener(topics = {"offline", "online"})
-    public void receiveOfflinePayment(String paymentData){
+    public void receivePayment(String paymentData){
         PaymentDTO paymentDTO = readPayment(paymentData);
 
-        paymentManager.handle(paymentDTO.toPayment());
+        paymentManager.handle(paymentDTO);
     }
 
     private PaymentDTO readPayment(String data){
