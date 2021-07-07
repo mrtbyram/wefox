@@ -1,8 +1,6 @@
 package com.muratbayram.wefox.adapter;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.muratbayram.wefox.core.model.OfflinePayment;
-import com.muratbayram.wefox.core.model.OnlinePayment;
 import com.muratbayram.wefox.core.model.Payment;
 
 import java.math.BigDecimal;
@@ -12,7 +10,7 @@ public class PaymentDTO {
     @JsonProperty("payment_id")
     private String paymentId;
     @JsonProperty("account_id")
-    private String accountId;
+    private Long accountId;
     @JsonProperty("payment_type")
     private String paymentType;
     @JsonProperty("credit_card")
@@ -20,27 +18,15 @@ public class PaymentDTO {
     private BigDecimal amount;
     private Integer delay;
 
-    public OfflinePayment toOfflinePayment(){
-        OfflinePayment offlinePayment = new OfflinePayment();
-        initCommonFields(offlinePayment);
-
-        return offlinePayment;
-    }
-
-    public OnlinePayment toOnlinePayment(){
-        OnlinePayment onlinePayment = new OnlinePayment();
-        initCommonFields(onlinePayment);
-
-        onlinePayment.setCreditCard(this.creditCard);
-
-        return onlinePayment;
-    }
-
-    private void initCommonFields(Payment payment){
-        payment.setPaymentId(this.accountId);
+    public Payment toPayment(){
+        Payment payment = new Payment();
+        payment.setPaymentId(this.paymentId);
         payment.setAccountId(this.accountId);
-        payment.setAmount(this.getAmount());
+        payment.setAmount(this.amount);
         payment.setDelay(this.delay);
+        payment.setCreditCard(this.creditCard);
+        payment.setPaymentType(this.paymentType);
+        return payment;
     }
 
     @Override
@@ -63,11 +49,11 @@ public class PaymentDTO {
         this.paymentId = paymentId;
     }
 
-    public String getAccountId() {
+    public Long getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(String accountId) {
+    public void setAccountId(Long accountId) {
         this.accountId = accountId;
     }
 

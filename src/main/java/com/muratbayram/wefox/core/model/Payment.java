@@ -2,22 +2,14 @@ package com.muratbayram.wefox.core.model;
 
 import java.math.BigDecimal;
 
-public abstract class Payment {
+public class Payment {
 
     private String paymentId;
-    private String accountId;
+    private Long accountId;
     private BigDecimal amount;
     private Integer delay;
-
-    @Override
-    public String toString() {
-        return "Payment{" +
-                "paymentId='" + paymentId + '\'' +
-                ", accountId='" + accountId + '\'' +
-                ", amount=" + amount +
-                ", delay=" + delay +
-                '}';
-    }
+    private String paymentType;
+    private String creditCard;
 
     public String getPaymentId() {
         return paymentId;
@@ -27,11 +19,11 @@ public abstract class Payment {
         this.paymentId = paymentId;
     }
 
-    public String getAccountId() {
+    public Long getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(String accountId) {
+    public void setAccountId(Long accountId) {
         this.accountId = accountId;
     }
 
@@ -49,5 +41,21 @@ public abstract class Payment {
 
     public void setDelay(Integer delay) {
         this.delay = delay;
+    }
+
+    public String getCreditCard() {
+        return creditCard;
+    }
+
+    public void setCreditCard(String creditCard) {
+        this.creditCard = creditCard;
+    }
+
+    public String getPaymentType() {
+        return paymentType;
+    }
+
+    public void setPaymentType(String paymentType) {
+        this.paymentType = paymentType;
     }
 }

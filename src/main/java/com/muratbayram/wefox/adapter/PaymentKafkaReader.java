@@ -2,11 +2,7 @@ package com.muratbayram.wefox.adapter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.muratbayram.wefox.core.model.OfflinePayment;
-import com.muratbayram.wefox.core.model.OnlinePayment;
-import com.muratbayram.wefox.core.service.OfflinePaymentManager;
-import com.muratbayram.wefox.core.service.OnlinePaymentManager;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.muratbayram.wefox.core.service.PaymentManager;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
@@ -15,27 +11,17 @@ public class PaymentKafkaReader {
 
     private ObjectMapper mapper = new ObjectMapper();
 
-    private OfflinePaymentManager offlinePaymentManager;
-    private OnlinePaymentManager onlinePaymentManager;
+    private PaymentManager paymentManager;
 
-    @Autowired
-    public PaymentKafkaReader(OfflinePaymentManager offlinePaymentManager, OnlinePaymentManager onlinePaymentManager) {
-        this.offlinePaymentManager = offlinePaymentManager;
-        this.onlinePaymentManager = onlinePaymentManager;
+    public PaymentKafkaReader(PaymentManager paymentManager) {
+        this.paymentManager = paymentManager;
     }
 
-    @KafkaListener(topics = "offline")
+    @KafkaListener(topics = {"offline", "online"})
     public void receiveOfflinePayment(String paymentData){
         PaymentDTO paymentDTO = readPayment(paymentData);
 
-        offlinePaymentManager.handle(paymentDTO.toOfflinePayment());
-    }
-
-    @KafkaListener(topics = "online")
-    public void receiveOnlinePayment(String paymentData){
-        PaymentDTO paymentDTO = readPayment(paymentData);
-
-        onlinePaymentManager.handle(paymentDTO.toOnlinePayment());
+        paymentManager.handle(paymentDTO.toPayment());
     }
 
     private PaymentDTO readPayment(String data){

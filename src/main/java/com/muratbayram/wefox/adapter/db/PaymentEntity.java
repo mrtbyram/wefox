@@ -1,8 +1,11 @@
 package com.muratbayram.wefox.adapter.db;
 
+import com.muratbayram.wefox.core.model.Payment;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
@@ -14,8 +17,19 @@ public class PaymentEntity {
     private Long accountId;
     private String paymentType;
     private String creditCard;
-    private Integer amount;
+    private BigDecimal amount;
     private Date createdOn;
+
+    public PaymentEntity() {
+    }
+
+    public PaymentEntity(Payment payment) {
+        this.paymentId = payment.getPaymentId();
+        this.accountId = payment.getAccountId();
+        this.paymentType = payment.getPaymentType();
+        this.creditCard = payment.getCreditCard();
+        this.amount = payment.getAmount();
+    }
 
     public String getPaymentId() {
         return paymentId;
@@ -49,11 +63,11 @@ public class PaymentEntity {
         this.creditCard = creditCard;
     }
 
-    public Integer getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
