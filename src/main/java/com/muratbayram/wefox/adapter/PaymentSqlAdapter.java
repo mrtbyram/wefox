@@ -6,6 +6,7 @@ import com.muratbayram.wefox.core.model.Payment;
 import com.muratbayram.wefox.core.port.PaymentDBPort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.util.Date;
 
@@ -20,9 +21,9 @@ public class PaymentSqlAdapter implements PaymentDBPort {
     }
 
     @Override
-    public void insert(Payment payment) {
+    public Mono<Void> insert(Payment payment) {
         PaymentEntity entity = new PaymentEntity(payment);
         entity.setCreatedOn(new Date());
-        repository.save(entity);
+        return Mono.fromRunnable(() -> repository.save(entity));
     }
 }

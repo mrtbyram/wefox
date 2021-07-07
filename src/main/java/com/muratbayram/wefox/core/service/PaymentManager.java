@@ -37,28 +37,28 @@ public class PaymentManager {
                 .bodyValue(paymentDTO)
                 .retrieve()
                 .toBodilessEntity()
-                .doOnError((ex) -> createErrorLog(paymentDTO, ex.getMessage()))
+                .doOnError((ex) -> createErrorLog(paymentDTO, "network", ex.getMessage()))
                 .subscribe((res) -> createPayment(paymentDTO));
     }
 
     private void createPayment(PaymentDTO paymentDTO){
         System.out.println("Creating successful payment " + paymentDTO.getPaymentId());
-        paymentDB.insert(paymentDTO.toPayment());
-
+        paymentDB.insert(paymentDTO.toPayment())
+                .doOnError((ex) -> createErrorLog(paymentDTO, "database", ex.getMessage()))
+                .subscribe();
     }
 
-    private void createErrorLog(PaymentDTO paymentDTO, String error){
+    private void createErrorLog(PaymentDTO paymentDTO, String type, String message){
         System.out.println("Creating error log " + paymentDTO.getPaymentId());
 
         PaymentErrorDTO errorDTO = new PaymentErrorDTO();
         errorDTO.setPaymentId(paymentDTO.getPaymentId());
-        errorDTO.setErrorType("network");
-        errorDTO.setErrorDescription(error);
+        errorDTO.setErrorType(type);
+        errorDTO.setErrorDescription(message);
 
         webClient.post().uri("log")
                 .bodyValue(errorDTO)
                 .retrieve()
                 .toBodilessEntity().subscribe();
-
     }
 }
