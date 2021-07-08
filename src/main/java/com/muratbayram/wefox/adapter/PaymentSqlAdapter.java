@@ -22,9 +22,9 @@ public class PaymentSqlAdapter implements PaymentDBPort {
     }
 
     @Override
-    public Mono<Void> insert(Payment payment) {
+    public Mono<PaymentEntity> insert(Payment payment) { //TODO: should not return entity because of dependency
         PaymentEntity entity = new PaymentEntity(payment);
         entity.setCreatedOn(new Date());
-        return Mono.fromFuture(CompletableFuture.runAsync(() -> repository.save(entity)));
+        return Mono.fromFuture(CompletableFuture.supplyAsync(() -> repository.save(entity)));
     }
 }

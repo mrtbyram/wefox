@@ -2,6 +2,7 @@ package com.muratbayram.wefox.core.service;
 
 import com.muratbayram.wefox.core.model.PaymentDTO;
 import com.muratbayram.wefox.core.model.PaymentErrorDTO;
+import com.muratbayram.wefox.core.port.AccountDBPort;
 import com.muratbayram.wefox.core.port.PaymentDBPort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,10 +24,12 @@ public class PaymentManager {
     private WebClient paymentCheckClient;
     private WebClient errorLogClient;
     private PaymentDBPort paymentDB;
+    private AccountDBPort accountDB;
 
     @Autowired
-    public PaymentManager(PaymentDBPort paymentDB) {
+    public PaymentManager(PaymentDBPort paymentDB, AccountDBPort accountDB) {
         this.paymentDB = paymentDB;
+        this.accountDB = accountDB;
         Hooks.onErrorDropped((ex) -> {});
     }
 
@@ -61,6 +64,7 @@ public class PaymentManager {
         System.out.println("Creating successful payment " + paymentDTO.getPaymentId());
         paymentDB.insert(paymentDTO.toPayment())
                 .doOnError((ex) -> createErrorLog(paymentDTO, "database", ex.getMessage()))
+                .doOnSuccess((entity) -> accountDB.updateLastPayment(paymentDTO.getAccountId(), entity.getCreatedOn()))
                 .subscribe();
     }
 
