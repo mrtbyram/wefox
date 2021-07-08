@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.util.Date;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class PaymentSqlAdapter implements PaymentDBPort {
@@ -24,6 +25,6 @@ public class PaymentSqlAdapter implements PaymentDBPort {
     public Mono<Void> insert(Payment payment) {
         PaymentEntity entity = new PaymentEntity(payment);
         entity.setCreatedOn(new Date());
-        return Mono.fromRunnable(() -> repository.save(entity));
+        return Mono.fromFuture(CompletableFuture.runAsync(() -> repository.save(entity)));
     }
 }
